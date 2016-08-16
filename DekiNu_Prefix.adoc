@@ -1,0 +1,813 @@
+
+
+
+
+= ***でき ぬ?　　　　　　　Gentoo Prefix***
+
+
+[quote, 拝承製作所]
+____
+C90 西f-14a
+____
+
+<<<
+
+== はじめに
+
+こんにちは、(オズ) @Wizard_of_Oz__といいます。
+お手にとっていただき有り難うございます。
+Gentoo Installしてますか？
+
+この本を手にとって頂いた方ならご存知だと思いますが、
+Gentooはカーネルから自分で選択することができる素晴らしいLinuxディストリビューションです。
+// Gentooをインストールしたことがない方は #GentooInstallBattleしませんか？ をご覧になってください。
+とはいえGentooは使ってみたいが満足する環境を作るのが大変だという方や、
+今まで構築してきたLinux環境を壊せない、使える環境や借りたVSPが
+OSインストールの自由度がない環境という方もいるでしょう。
+
+そのような環境でもGentooの一端を味わうことが出来ます。
+Gentoo PrefixはGentooの高い自由度の元になっているパッケージマネージャーを
+他のプラットホームでも使えるというものです。
+
+さらに、Gentoo Prefixのインストールには管理者権限は必要ありません。
+つまりあなたがルート権限もなく好きなソフトも入れられない環境でも
+Gentoo Prefixを使えばあんなソフトやこんなソフトもインストールすることが出来るかもしれません。
+
+次からGentoo Prefixのインストール方法について説明していきます。
+
+.おねがい
+----
+今回本を書くに辺りいろいろ調べたり試したりしましたが、
+今まで永く使ってきたというわけではないので正しくないやり方や
+もっと良いやり方があるかと思われます。
+もしそのような点がありましたらぜひとも教えて頂けないでしょうか。
+やさしめのマサカリ待ってます。
+----
+
+== Gentoo Prefixのインストール
+
+それではGentoo Prefixのインストール方法について説明します。 +
+ここで一番大事なことは、このページ https://wiki.gentoo.org/wiki/Prefix/libc にある +
+bootstrap-rap.sh (http://dev.gentoo.org/~heroxbd/bootstrap-rap.sh) を使うということです。 +
+
+[NOTE]
+====
+最初Project:Prefix(https://wiki.gentoo.org/wiki/Project:Prefix)のページを見て
+bootstrap-prefix.shを使ったインストールを試しました。
+しかしどの環境でも途中でエラーとなり色々試しましたが結局は成功しませんでした。
+====
+
+Gentoo Prefixはデフォルトではrootユーザはインストールできません。
+ここに詳細は記載しませんが、上記ページのManual Installationであればrootユーザでも
+問題なくインストールできるので、rootで使いたい方はそちらを参照してみてください。
+
+コンパイラも必要となります。下記のようにコンパイラをインストールしましょう。
+
+----
+Ubuntu: $sudo apt install build-essential
+CentOS: $sudo yum install gcc
+----
+
+上記の準備が整ったらあとはスクリプトをダウンロードして実行権限を与えて実行するだけです。
+
+----
+user $ wget http://dev.gentoo.org/~heroxbd/bootstrap-rap.sh
+user $ chmod 755 bootstrap-rap.sh
+user $ ./bootstrap-rap.sh
+
+                                             .
+       .vir.                                d$b
+    .d$$$$$$b.    .cd$$b.     .d$$b.   d$$$$$$$$$$$b  .d$$b.      .d$$b.
+    $$$$( )$$$b d$$$()$$$.   d$$$$$$$b Q$$$$$$$P$$$P.$$$$$$$b.  .$$$$$$$b.
+    Q$$$$$$$$$$B$$$$$$$$P"  d$$$PQ$$$$b.   $$$$.   .$$$P' `$$$ .$$$P' `$$$
+      "$$$$$$$P Q$$$$$$$b  d$$$P   Q$$$$b  $$$$b   $$$$b..d$$$ $$$$b..d$$$
+     d$$$$$$P"   "$$$$$$$$ Q$$$     Q$$$$  $$$$$   `Q$$$$$$$P  `Q$$$$$$$P
+    $$$$$$$P       `"""""   ""        ""   Q$$$P     "Q$$$P"     "Q$$$P"
+    `Q$$P"                                  """
+
+             Welcome to the Gentoo Prefix interactive installer!
+
+
+    I will attempt to install Gentoo Prefix on your system.  To do so, I'll
+    ask  you some questions first.    After that,  you'll have to  practise
+    patience as your computer and I try to figure out a way to get a lot of
+    software  packages  compiled.    If everything  goes according to plan,
+    you'll end up with what we call  "a Prefix install",  but by that time,
+    I'll tell you more.
+
+
+Do you want me to start off now? [Yn] 
+----
+
+インストールを続けてもいいか確認されるのでyで続けます。
+
+----
+It seems to me you are 'user' (1000), that looks cool to me.
+
+I'm going to check for some variables in your environment now:
+  it appears ASFLAGS is not set :)
+  it appears CFLAGS is not set :)
+  it appears CPPFLAGS is not set :)
+  it appears CXXFLAGS is not set :)
+  it appears DYLD_LIBRARY_PATH is not set :)
+  it appears GREP_OPTIONS is not set :)
+  it appears LDFLAGS is not set :)
+  it appears LD_LIBRARY_PATH is not set :)
+  it appears LIBPATH is not set :)
+  it appears PERL_MM_OPT is not set :)
+  it appears PKG_CONFIG_PATH is not set :)
+  it appears PYTHONPATH is not set :)
+  it appears ROOT is not set :)
+
+I'm excited!  Seems we can finally do something productive now.
+
+Ok, I'm going to do a little bit of guesswork here.  Thing is, your
+machine appears to be identified by CHOST=x86_64-pc-linux-gnu.
+
+Great!  You appear to have a compiler in your PATH
+
+
+I did my utmost best, and found that you have 4 cpu cores.  If
+this looks wrong to you, you can happily ignore me.  Based on the number
+of cores you have, I came up with the idea of parallelising compilation
+work where possible with 3 parallel make threads.  If you have no
+clue what this means, you should go with my excellent default I've
+chosen below, really!
+
+How many parallel make jobs do you want? [3]
+----
+
+次に並列ジョブ数をいくつにするか確認されます。上に自分のマシンのコア数が表示されており、
+それから適した値が自動的にデフォルト値として選択されているはずです。
+負荷を掛けたくない、全力でコンパイルしたいなど希望がある場合は自分で
+好きな数を入力してエンターを押します。
+特に希望がない場合はそのままエンターを押せばカッコの値で進みます。
+
+----
+Each and every Prefix has a home.  That is, a place where everything is
+supposed to be in.  That place must be fully writable by you (duh), but
+should also be able to hold some fair amount of data and preferably be
+reasonably fast.  In terms of space, I advise something around 2GiB
+(it's less if you're lucky).  I suggest a reasonably fast place because
+we're going to compile a lot, and that generates a fair bit of IO.  If
+some networked filesystem like NFS is the only option for you, then
+you're just going to have to wait a fair bit longer.
+This place which is your Prefix' home, is often referred to by a
+variable called EPREFIX.
+
+What do you want EPREFIX to be? [/home/user/gentoo]
+----
+
+Gentoo Prefixをどこにインストールするか確認されます。
+デフォルトでは自分のホームフォルダにgentooというフォルダが作られると思います。
+希望があれば場所を入力し、特に希望がなければそのままエンターでOKです。
+対象フォルダはなければ自動で作られます。。
+
+----
+OK!  I'm going to give it a try, this is what I have collected sofar:
+  EPREFIX=/home/user/gentoo
+  CHOST=x86_64-pc-linux-gnu
+  PATH=/home/user/gentoo/usr/bin:/home/user/gentoo/bin:/home/user/gentoo/tmp/usr/bin:/home/user/gentoo/tmp/bin:/usr/bin:/bin
+  MAKEOPTS=-j3
+
+I'm now going to make an awful lot of noise going through a sequence of
+stages to make your box as groovy as I am myself, setting up your
+Prefix.  In short, I'm going to run stage1, stage2, stage3, followed by
+emerge -e system.  If any of these stages fail, both you and me are in
+deep trouble.  So let's hope that doesn't happen.
+
+Type here what you want to wish me [luck]
+----
+
+最後の確認です。うまく行くことを祈りたい場合はluckと入力しましょう。
+とくに何も入力しなくても問題はありません。
+別のことを入力してもちょっと怒られるだけでそのまま進みます。
+----
+#Huh?  You're not serious, are you?
+----
+
+インストールの操作は以上です。待っていれば特に問題なくインストール終了するはずです。
+もしも止まっても、再度やり直せば進むと思います。
+
+ちなみにインストール完了までの時間ですが、Azure上で2core7GB環境を借りた所3時間程かかりました。
+出かける前や寝る前などに流しておくといいでしょう。
+
+
+== Gentoo Prefix起動
+
+特に問題なくインストール完了すると、以下のメッセージが表示されます。
+----
+Woah!  Everything just worked!  Now YOU should run
+/home/user/gentoo/startprefix
+and enjoy!  Thanks for using me, it was a pleasure to work with you.
+----
+
+メッセージの通りstartprefix.shを実行しましょう。
+----
+user $ ./gentoo/startprefix.sh
+----
+
+Ubuntu環境だとlesspipeがどうのと表示が出るかもしれません。
+.bashrcのlesspipeのところで出ているようですが
+とくに調べていませんが無視しても問題なさそうです。
+
+おめでとうございます。ついにGentoo Prefix環境を使用することが出来ます。
+これでemergeコマンドなどが使用できるようになります。
+ひとまず試してみましょう。
+
+----
+$ emerge -av sl
+----
+
+おそらく問題なく完了すると思います。それでは実行してみましょう。
+----
+$ sl
+----
+……なんだか昔見たのとくらべてえらくパワーアップしてる気がしますが、
+うまく動いていることが確認できると思います。
+
+長い長いslコマンドが終わったら、そのコマンドがどこにあるか確認してみましょう。
+
+----
+$ which sl
+/home/user/gentoo/usr/bin/sl
+----
+
+Gentoo Prefixをインストールした場所の下に通常のLinxuと同じような構成で
+インストールされているのが解ると思います。
+またlsなどのコマンドもGentoo Prefixのものが使用されるようになっています。
+----
+$ which ls
+----
+などして確認してみましょう。
+
+Gentoo Prefixでインストールされていないものは元のOSのものが使用されます。
+----
+$ which apt
+/usr/bin/apt
+----
+
+全てをGentoo Prefixでインストールする必要はなく、必要に応じて使い分けていくといいでしょう。
+
+
+== インストール完了後
+
+さて、インストールは完了しましたが、Gentoo WikiにいくつかTipsが乗っているので
+それらを実行していきましょう。
+
+=== Synchronize with the RAP repository
+なにやらmain gentoo repositoryにまだマージされてないパッチのリポジトリのようで
+通常はアップデートの必要はないと記載されていますが設定してみましょう。
+まずは書いてあるとおりにコマンドを実行していきます。
+
+----
+user $emerge dev-vcs/git # needed for sync
+...
+The following USE changes are necessary to proceed:
+(see "package.use" in the portage(5) man page for more details)
+# required by dev-scheme/guile-2.0.12-r1::gentoo
+# required by sys-devel/autogen-5.18.10::gentoo
+# required by net-libs/gnutls-3.4.14::gentoo[tools]
+# required by app-crypt/gnupg-2.1.14-r1::gentoo[gnutls]
+# required by dev-vcs/git-2.9.2::gentoo[gpg]
+# required by dev-vcs/git (argument)
+>=dev-libs/boehm-gc-7.4.2 threads
+----
+
+USEフラグを追加しろと言われてしまいましたね。
+設定ファイルは以下に存在します。
+----
+/home/user/gentoo/etc/portage/package.use
+----
+手動で設定してもいいですが、面倒なので自動で追加しましょう。
+-aオプションを追加してautounmaskで設定しましょう。
+再度以下のようにemergeを実行します。
+----
+$ emerge -av dev-vcs/git
+...
+Would you like to add these changes to your config files? [Yes/No] y
+----
+コンフィグファイルを変更するか確認されるのでyを入力しましょう。
+これだけではすぐ変更は反映されないので、dispatch-confを実行しましょう。
+----
+$ dispatch-conf
+----
+初めてdispatch-confを実行する場合、etc/hostsの変更をどうするか確認されるかもしれません。
+特に理由がなければ更新しておきましょう。下に説明が出ていますが、
+uを押すと表示されているとおりに更新されます。
+次にpackage.useの更新が確認されるので、同じようにuを押して更新しましょう。
+
+再度gitのインストールを行います、
+----
+$ emerge dev-vcs/git
+----
+おや、エラーが出てしまいました。以下がエラー全体を抜き出したものになります。
+----
+mv: cannot stat '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/image//usr/lib64/libguile-*-gdb.scm': No such file or directory
+ * ERROR: dev-scheme/guile-2.0.12-r1::gentoo failed (install phase):
+ *   (no error message)
+ * 
+ * Call stack:
+ *     ebuild.sh, line 115:  Called src_install
+ *   environment, line 2352:  Called die
+ * The specific snippet of code:
+ *       mv "${D}"/usr/$(get_libdir)/libguile-*-gdb.scm "${D}"/usr/share/gdb/auto-load/$(get_libdir) || die;
+ * 
+ * If you need support, post the output of `emerge --info '=dev-scheme/guile-2.0.12-r1::gentoo'`,
+ * the complete build log and the output of `emerge -pqv '=dev-scheme/guile-2.0.12-r1::gentoo'`.
+ * The complete build log is located at '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/temp/build.log'.
+ * The ebuild environment file is located at '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/temp/environment'.
+ * Working directory: '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/work/guile-2.0.12'
+ * S: '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/work/guile-2.0.12'
+
+>>> Failed to emerge dev-scheme/guile-2.0.12-r1, Log file:
+
+>>>  '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/temp/build.log'
+----
+
+ここで注目するところはまずここです。
+
+----
+mv: cannot stat '/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/image//usr/lib64/libguile-*-gdb.scm': No such file or directory
+----
+
+どうやらlibguile-*gdb.scmが見つからないために失敗したようですね。
+Call stack:の記載を確認すると、ebuild.shのsrc_installの部分で失敗しているようです。
+失敗したコード(specific snippet of code)は下記のようになっていますね。
+----
+mv "${D}"/usr/$(get_libdir)/libguile-*-gdb.scm "${D}"/usr/share/gdb/auto-load/$(get_libdir) || die;
+----
+
+実際にインストール中のファイルを確認してみましょう。
+----
+/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/image/
+----
+と潜って行くと、次にあるのはusrディレクトリではなくhomeディレクトリがあるはずです。
+更に潜って行くと、以下の場所にファイルが見つかるはずです。
+----
+/home/user/gentoo/var/tmp/portage/dev-scheme/guile-2.0.12-r1/image/home/user/gentoo/usr/lib64/libguile-*-gdb.scm
+----
+
+ここでもう一度snippet of codeを見てみましょう。
+${D}の部分が正しく展開されていないように見えます。
+この${D}というのは何なのでしょうか。これは各ソフトをインストールする手順を記載してあるebuildファイルに使われているものです。
+このページ (https://devmanual.gentoo.org/eclass-reference/ebuild/) を見ると、以下のような説明があります。
+
+.VARIABLES
+[caption=""]
+====
+*D = ${PORTAGE_TMPDIR}/portage/${CATEGORY}/${PF}/image/*
+
+Contains the path to the temporary install directory. Every write operation that does not involve the helper tools and functions (found below) should be prefixed with ${D}. Beginning with EAPI 3, the offset prefix often needs to be taken into account here, for which the variable ${ED} is provided (see below). Do not modify this variable.
+
+*ED = ${PORTAGE_TMPDIR}/portage/${CATEGORY}/${PF}/image/${EPREFIX}/*
+
+Beginning with EAPI 3, contains the path "${D%/}${EPREFIX}/" for convenience purposes. For EAPI values prior to EAPI 3 which do not support ED, helpers use D where they would otherwise use ED. Do not modify this variable.
+====
+
+これを見ると原因が分かりますね。${D}というのはGentoo Prefix($EPREFIX)が考慮されていない変数のようです。
+EPREFIXはインストール時に指定したGentoo Prefixをインストールしたディレクトリになります。
+ちょうど今回抜けていた/home/user/gentooが格納されているものですね。
+${ED}を使用することでちゃんとGentoo Prefix環境でもインストールできそうです。
+
+では実際に試してみましょう。インストール手順を記載してあるebuidファイルは以下に格納されています。
+----
+/home/user/gentoo/usr/portage/dev-scheme/guile/guile-2.0.12-r1.ebuild 
+----
+このファイルの中身を見ると、snippet of codeで表示されていた行が見つかるはずです。
+----
+$ nano /home/user/gentoo/usr/portage/dev-scheme/guile/guile-2.0.12-r1.ebuild
+
+src_install() {
+...
+    mv "${D}"/usr/$(get_libdir)/libguile-*-gdb.scm "${D}"/usr/share/gdb/auto-load/$(get_libdir) || die
+----
+この行を以下のように書き換えます。
+----
+    mv "${ED}"/usr/$(get_libdir)/libguile-*-gdb.scm "${ED}"/usr/share/gdb/auto-load/$(get_libdir) || die
+----
+このファイルを保存してもそのままでは動きません。
+ebuildファイルを変更した場合は以下のように実行し、manifestファイルを再作成する必要があります。
+----
+$ ebuild /home/user/gentoo/usr/portage/dev-scheme/guile/guile-2.0.12-r1.ebuild digest
+>>> Creating Manifest for /home/user/gentoo/usr/portage/dev-scheme/guile
+----
+あとは再度emergeを実行するだけです。今度はguileで失敗せずに最後までインストールできると思います。
+
+----
+$ emerge dev-vcs/git
+...
+ * Messages for package dev-vcs/git-2.9.2:
+
+ * These additional scripts need some dependencies:
+ *   git-quiltimport  : dev-util/quilt
+ *   git-instaweb     : || ( www-servers/lighttpd www-servers/apache www-servers/nginx )
+>>> Auto-cleaning packages...
+
+>>> No outdated packages were found on your system.
+----
+
+
+長くなってしまいましたが、これでgitがインストール出来ました。
+残念ながらそれぞれのパッケージでPrefixは十分考慮されているとは言えず、ちょくちょくインストールに失敗してしまいます。 +
+しかしエラーメッセージを見ればほとんどの問題は簡単に対処できると思います。
+特にebuildで${D}を指定しているため失敗するケースが多いため、上記の
+エラーの見方や対応を一度体験しておけば問題ないと思います。
+
+
+さて、元の話題に戻りましょう。RAP repositoryをアップデートするのが目的でした。
+Wikiの次の行のコマンドを見てみると、以下のようになっています。
+----
+user $[ -d ${EPREFIX}/usr/portage-stage/.git ] || rm -rf ${EPREFIX}/usr/portage-stage
+----
+しかし${EPREFIX}はManual Installを実施していなければ設定されていないはずです。
+自分で${EPREFIX}を設定するか補ってあげましょう。
+実際にやっていることは下記ディレクトリが存在するか確認しているだけです。
+----
+/home/user/gentoo/usr/portage-stage/.git
+----
+インストールしたばかりであればこのディレクトリは存在してないはずですので、
+コマンドの通り下記ディレクトリを削除しましょう。
+----
+user $ rm -rf /home/user/gentoo/usr/portage-stage
+----
+
+削除したあとは下記コマンドを実行することでportage-stageが更新されます。
+----
+user $emaint sync -r rap
+----
+
+これでSynchronize with the RAP repositoryの対応は終了です。 +
+はじめgitのインストールで長々と解説しましたが、
+実はemergeでgitをインストールしなくても、元のOS側でgitをインストールできれば進むことが出来ます。
+ただebuildの${D}でインストールが失敗する問題はたびたび発生するため、最初に説明させて頂きました。
+
+
+=== Compile Inside Memory
+こちらはコンパイル時にメモリを使用するためのTipsですね。 +
+メモリをたくさん積んでいる方は試してみてもいいかもしれません。 +
+(私はまだ試してないので細かいことが書けないのです...) +
+
+=== Add an en_US.UTF-8 locale
+ロケールの設定ですね。localeコマンドを実行してもらえれば分かりますが、
+最初のロケールはPosixになっています。記載に従ってロケールを変更してみましょう。
+----
+$ nano /home/user/gentoo/etc/locale.gen
+----
+各種ロケールが全てコメントアウトされた状態になっています。
+この本を読んでいるということはおそらく日本語話者だとおもいますので、
+下記2つのコメントアウトを外すのがお勧めです。
+----
+en_US.UTF-8 UTF-8
+ja_JP.UTF-8 UTF-8
+----
+コメントアウトを外しましたらlocale-genを実行しましょう。
+
+Wikiにはここまでしか記載されていませんが、ここまでではまだlocaleは変更されません。 +
+eselectでlocaleを確認し、選択しましょう。
+----
+user $ eselect locale list
+Available targets for the LANG variable:
+  [1]   C
+  [2]   POSIX
+  [3]   en_US.utf8
+  [4]   ja_JP.utf8
+  [ ]   (free form)
+user $ eselect locale set 4
+----
+
+これでlocaleが日本語に変わりました。
+
+=== Use a nearby mirror
+ダウンロード先を近くに変更する方法ですね。
+bootstrap時にも有効なようですが気づかなかったので自分は試せていません。
+インストール後もmake.confに設定することでミラーを使用してくれるようになります。
+Prefixでは使用していませんが、自分のGentoo環境では以下を使用していました。(現在はGit経由にしているので使っていませんが)
+----
+http://ftp.jaist.ac.jp/pub/Linux/Gentoo/
+----
+
+
+== 使用事例
+
+ここまで説明した内容でGentoo Prefixが使えるようになったと思います。
+実際のGentoo Prefixの使い道の説明としての一例を示したいと思います。
+
+今回Gentoo Prefixについて調べたのはDTIのServersManというVPSを借りたところからです。
+このVPSは最安467円(税抜)で借りられるというもので、
+自宅で常時稼働させているサービスを移して常時稼働させているサーバを減らそうと行ったものでした。
+
+しかし(安さにつられて)実際借りてみると、OSはCentOS, Debian, Ubuntuしか選択できず、
+Ubuntuは最新でも14.04までと言ったものでした。
+さらにUbuntuをインストールしてアップグレードすればいいかとログインしてみた所
+仮想化にはKVMなどが使用されているのではなくOpenVZ(いわゆるコンテナ)が使用されており
+アップグレードもカーネルの変更も出来ないと行ったものでした。
+
+そこでGentoo Prefixを使用することにより、使用したいバージョンの
+プログラムを使用できるようになりました。
+結果的に月500円ほどでサービスを動かせるようになりましたので
+DTIも悪くないかなと思います。
+ただ、使用できるリソースはかなり制限されるようで、
+Gentoo Prefixをインストールしていると長期間リソースを使用したからか
+CPU使用率が20%に制限されてインストール完了まで48時間ほどかかりましたが……
+
+
+== おまけ:mikutterインストール
+
+Gentoo Prefix環境を使用することでGentooで提供されている新しいパッケージを使用できるようになります。
+ちょうどつい先日Gentoo Developerのなおたさんがmikutter-3.4.2をリリースしてくれたので、これをインストールしてみようと思います。 +
+(本当に直前(8/12)にリリースされたので今まさに確認しながらこれを書いています)
+
+まずmikutterをインストールする前に、make.confを編集します。
+----
+$ nano /home/user/gentoo/etc/portage/make.conf
+----
+後ろにRUBY_TARGETの指定を追加します。
+(これがないとパッケージのコンフリクトが発生します)
+----
+RUBY_TARGETS="ruby21"
+----
+また、USEにXを追加します。これがないとgtkがうまくインストールされません。
+----
+USE="unicode nls X"
+----
+make.confの編集が終わるとmikutterのインストールを行います。
+----
+$ emerge -av mikutter   
+----
+最初はUSEの追加が要求されるので、yesとした後dispatch-confで追加します。
+再度emergeを実行してしばらく待つと以下のようなエラーが出ます。
+
+----
+>>> Completed installing alsa-utils-1.1.2 into /home/user/gentoo/var/tmp/portage/media-sound/alsa-utils-1.1.2/image/
+
+ * Final size of build directory: 6712 KiB
+ * Final size of installed tree: 2372 KiB
+
+ * QA Notice: the following files are outside of the prefix:
+ * /var
+ * /var/lib
+ * /var/lib/alsa
+ * /lib
+ * /lib/udev
+ * /lib/udev/rules.d
+ * /lib/udev/rules.d/90-alsa-restore.rules
+ * ERROR: media-sound/alsa-utils-1.1.2::gentoo failed:
+ *   Aborting due to QA concerns: there are files installed outside the prefix
+ * 
+ * Call stack:
+ *   misc-functions.sh, line 603:  Called install_qa_check
+ *   misc-functions.sh, line 217:  Called source 'install_symlink_html_docs'
+ *            05prefix, line 114:  Called install_qa_check_prefix
+ *            05prefix, line  27:  Called die
+ * The specific snippet of code:
+ *                      die "Aborting due to QA concerns: there are files installed outside the prefix"
+ * 
+ * If you need support, post the output of `emerge --info '=media-sound/alsa-utils-1.1.2::gentoo'`,
+ * the complete build log and the output of `emerge -pqv '=media-sound/alsa-utils-1.1.2::gentoo'`.
+ * The complete build log is located at '/home/user/gentoo/var/tmp/portage/media-sound/alsa-utils-1.1.2/temp/build.log'.
+ * The ebuild environment file is located at '/home/user/gentoo/var/tmp/portage/media-sound/alsa-utils-1.1.2/temp/environment'.
+ * Working directory: '/home/user/gentoo/var/tmp/portage/media-sound/alsa-utils-1.1.2/image/home/user/gentoo'
+ * S: '/home/user/gentoo/var/tmp/portage/media-sound/alsa-utils-1.1.2/work/alsa-utils-1.1.2'
+!!! post install failed; exiting.
+----
+
+どうやらコンパイルはうまく行っているようですが、QAフェーズで問題を見つけたようです。
+QA Noticeをそのまま読むとalsaで使用する/var/lib/alsaなどがprefixの範囲外のためという事のようです。
+対応として今回はalsa自体を使用しないようにしてみようと思います。どうせ音鳴らないだけですしね。
+
+前と同じようにebuildファイルを修正します。
+----
+$ nano gentoo/usr/portage/net-misc/mikutter/mikutter-3.4.2.ebuild
+----
+ebuild内に以下の項目が見つかります。おそらくここでalsaを使用するよう依存関係を設定しているのでしょう。
+----
+RDEPEND="
+        libnotify? ( x11-libs/libnotify )
+        media-sound/alsa-utils"
+----
+
+ここで思い切って以下のように修正してみます。
+----
+RDEPEND="
+        libnotify? ( x11-libs/libnotify )"
+#        media-sound/alsa-utils"
+----
+
+ebuildを修正した後は以前と同様にmanifestファイルを更新します。
+----
+$ ebuild gentoo/usr/portage/net-misc/mikutter/mikutter-3.4.2.ebuild digest
+----
+再度mikutterのインストールを開始してみましょう。
+----
+$ emerge -av mikutter
+----
+うまく行ったようです。alsaを飛ばしてコンパイルをはじめました。
+
+しばらくするとまた停止しました。ruby-2.1.10ですね。
+----
+* ERROR: dev-lang/ruby-2.1.10::gentoo failed (install phase):
+ *   rm rubygems failed
+ * 
+ * Call stack:
+ *     ebuild.sh, line 115:  Called src_install
+ *   environment, line 3215:  Called die
+ * The specific snippet of code:
+ *       rm -r "${D}/usr/$(get_libdir)/ruby/${RUBYVERSION}/rubygems" || die "rm rubygems failed";
+ * 
+ * If you need support, post the output of `emerge --info '=dev-lang/ruby-2.1.10::gentoo'`,
+ * the complete build log and the output of `emerge -pqv '=dev-lang/ruby-2.1.10::gentoo'`.
+ * The complete build log is located at '/home/user/gentoo/var/tmp/portage/dev-lang/ruby-2.1.10/temp/build.log'.
+ * The ebuild environment file is located at '/home/user/gentoo/var/tmp/portage/dev-lang/ruby-2.1.10/temp/environment'.
+ * Working directory: '/home/user/gentoo/var/tmp/portage/dev-lang/ruby-2.1.10/work/ruby-2.1.10'
+ * S: '/home/user/gentoo/var/tmp/portage/dev-lang/ruby-2.1.10/work/ruby-2.1.10'
+
+>>> Failed to emerge dev-lang/ruby-2.1.10, Log file:
+
+>>>  '/home/user/gentoo/var/tmp/portage/dev-lang/ruby-2.1.10/temp/build.log'
+----
+これはebuildで使用している変数が${D}になっているやつですね。
+今までと同様に直していきましょう。
+
+----
+$ nano gentoo/usr/portage/dev-lang/ruby/ruby-2.1.10.ebuild
+3行とも${D}を${ED}に変換
+    # Remove installed rubygems copy
+    rm -r "${ED}/usr/$(get_libdir)/ruby/${RUBYVERSION}/rubygems" || die "rm rubygems failed"
+    rm -r "${ED}/usr/$(get_libdir)/ruby/${RUBYVERSION}"/rdoc* || die "rm rdoc failed"
+    rm -r "${ED}/usr/bin/"{ri,rdoc}"${MY_SUFFIX}" || die "rm rdoc bins failed"
+
+$ ebuild gentoo/usr/portage/dev-lang/ruby/ruby-2.1.10.ebuild digest
+>>> Creating Manifest for /home/user/gentoo/usr/portage/dev-lang/ruby
+----
+
+次はdev-ruby/rcairoで停止してしまいました。
+----
+>>> Completed installing rcairo-1.15.2 into /home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/
+
+ * Final size of build directory: 1872 KiB
+ * Final size of installed tree: 560 KiB
+
+ * QA Notice: home/user/gentoo///home/user/gentoo/ double prefix
+ * QA Notice: home/user/gentoo///home/user/gentoo/usr double prefix
+ * QA Notice: home/user/gentoo///home/user/gentoo/usr/include double prefix
+ * QA Notice: home/user/gentoo///home/user/gentoo/usr/include/ruby-2.1.0 double prefix
+ * QA Notice: home/user/gentoo///home/user/gentoo/usr/include/ruby-2.1.0/rb_cairo.h double prefix
+ * ERROR: dev-ruby/rcairo-1.15.2::gentoo failed:
+ *   Aborting due to QA concerns: double prefix files installed
+ * 
+ * Call stack:
+ *   misc-functions.sh, line 603:  Called install_qa_check
+ *   misc-functions.sh, line 217:  Called source 'install_symlink_html_docs'
+ *            05prefix, line 114:  Called install_qa_check_prefix
+ *            05prefix, line  19:  Called die
+ * The specific snippet of code:
+ *              die "Aborting due to QA concerns: double prefix files installed"
+ * 
+ * If you need support, post the output of `emerge --info '=dev-ruby/rcairo-1.15.2::gentoo'`,
+ * the complete build log and the output of `emerge -pqv '=dev-ruby/rcairo-1.15.2::gentoo'`.
+!!! When you file a bug report, please include the following information:
+GENTOO_VM=  CLASSPATH="" JAVA_HOME=""
+JAVACFLAGS="" COMPILER=""
+and of course, the output of emerge --info =rcairo-1.15.2
+ * The complete build log is located at '/home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/temp/build.log'.
+ * The ebuild environment file is located at '/home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/temp/environment'.
+ * Working directory: '/home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo'
+ * S: '/home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/work'
+!!! post install failed; exiting.
+
+>>> Failed to emerge dev-ruby/rcairo-1.15.2, Log file:
+
+>>>  '/home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/temp/build.log'
+----
+今まで同様コンパイルは問題ないようですが、QA Noticeを見るとパスがおかしなことになっていますね。
+QA Noticeの一番下に出ているrb_cairo.hがどこにいるか確認してみましょう。
+----
+$ find . -name rb_cairo.h
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/work/all/rcairo-1.15.2/ext/cairo/rb_cairo.h
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/work/ruby21/rcairo-1.15.2/ext/cairo/rb_cairo.h
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user/gentoo/usr/include/ruby-2.1.0/rb_cairo.h
+----
+rc_cairo.h自体は確かに指定された場所に格納されているようです。
+より詳細にディレクトリ構成を確認してみましょう。
+----
+$ ls -R ./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/:
+user
+
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user:
+gentoo
+
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user/gentoo:
+usr
+
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user/gentoo/usr:
+include
+
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user/gentoo/usr/include:
+ruby-2.1.0
+
+./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/home/user/gentoo/usr/include/ruby-2.1.0:
+rb_cairo.h
+----
+どうもrc_cairo.hだけが変な場所に格納されているように見えますね。他のファイルはどこにあるのでしょうか。
+一階層下がってみましょう。
+----
+$ ls ./gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/home/user/gentoo/
+home  usr
+----
+ここにusrがあるということはどうやら本来はこの下に展開されるのが正しい気がしますね。
+ではebuildを確認してみましょう。
+----
+$ nano gentoo/usr/portage/dev-ruby/rcairo/rcairo-1.15.2.ebuild
+
+each_ruby_install() {
+        each_fakegem_install
+
+        insinto $(ruby_get_hdrdir)
+        doins ext/cairo/rb_cairo.h
+}
+----
+ここでrb_cairo.hを格納しているようです。ちょっとruby_get_hdrdirの中身を確認してみましょうか。
+
+ebuildの実態はただのシェルスクリプトなので、以下のようなことも出来ます。
+----
+each_ruby_install() {
+        each_fakegem_install
+
+        echo log: $(ruby_get_hdrdir)
+        insinto $(ruby_get_hdrdir)
+        doins ext/cairo/rb_cairo.h
+}
+----
+ebuildを編集したら再度実行して失敗させてみます。
+----
+$ ebuild gentoo/usr/portage/dev-ruby/rcairo/rcairo-1.15.2.ebuild digest
+>>> Creating Manifest for /home/user/gentoo/usr/portage/dev-ruby/rcairo
+$ emerge mikutter
+
+ * Running install phase for ruby21 ...
+log: /home/user/gentoo/usr/include/ruby-2.1.0
+----
+出ました！どうやらruby_get_hdrdirの中身にEPREFIXが含まれているようですね。
+これが他のところのEPREFIXと重複してしまうのが原因でしょう。
+
+さて、やっと原因がわかったので、後は対策するだけです。
+EPREFIXが重複してしまうことが原因なので、EPREFIXを一方から排除すればよいだけです。
+今回まさにパスを指定しているところを突き止めたので、ここからEPREFIXを除去すれば良さそうです。
+
+そこで編集した結果がこちら。
+----
+each_ruby_install() {
+        each_fakegem_install
+
+        echo log: `echo $(ruby_get_hdrdir) | sed "s|${EPREFIX}||"`
+        insinto `echo $(ruby_get_hdrdir) | sed "s|${EPREFIX}||"`
+        doins ext/cairo/rb_cairo.h
+}
+----
+シェルスクリプトなのでsedとかも使えます。
+ここで気を付けなければいけないことは、${EPREFIX}はスラッシュを含んでいるため
+sedの区切り文字としてスラッシュを使用する(sed "s/${EPREFIX}//")とうまく行きません。
+また変数${EPREFIX}を使っているので''で囲ってもダメです。
+
+さて、結果を確認してみましょう。うまく行ったか確認するため、rcairoのみをインストールしてみます。 +
+オプションの-1は一度だけインストールするためのオプションで、依存関係なのでインストールするが
+そのソフトそのものが必要なわけではないときなどに使用します。
+----
+$ ebuild gentoo/usr/portage/dev-ruby/rcairo/rcairo-1.15.2.ebuild digest
+>>> Creating Manifest for /home/user/gentoo/usr/portage/dev-ruby/rcairo
+$ emerge -1 dev-ruby/rcairo
+
+>>> Install rcairo-1.15.2 into /home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/ category dev-ruby
+ * Running install phase for ruby21 ...
+log: /usr/include/ruby-2.1.0
+ * Running install phase for all ...
+ * Running check install phase for ruby21 ...
+>>> Completed installing rcairo-1.15.2 into /home/user/gentoo/var/tmp/portage/dev-ruby/rcairo-1.15.2/image/
+----
+うまく行ったようですね。
+
+
+後は特に問題が起こらず、無事mikutterをインストールすることが出来ました。
+
+思ったよりも色々なエラーが出ましたが、エラーメッセージを見て調べていけば
+大体の問題は解決できると思います。
+今までのエラーは全てコンパイルではなくその後のインストール部分で出ているので、
+アプリのソースコードを編集する必要は基本的にないと思っています。
+
+
+== あとがき
+
+現在8月14日午前3時です。前回よりは早く仕上がりました、何とか寝れそうです。
+今回直前まで書く内容が決まらず、実際に書き始めたのが前日という突貫作業でした。
+何も学んでいない。
+
+また今回PDF化に前回と同じasciidocfxを使った所、何故か日本語が表示できないという
+問題に見舞われて寝る時間が一時間減ってしまいました。
+結局HTMLで出力してブラウザからPDF化を行っているのですが、
+そのせいでいまいちレイアウトがよろしくない状態になってしまっています。
+
+それでは、みなさんもGentoo Prefixを使ってみてください。
+
+
